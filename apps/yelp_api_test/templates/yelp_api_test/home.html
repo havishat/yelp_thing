@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Undecided</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'yelp_api_test/css/index.css' %}" media="screen" title="no title"  charset="utf-8">
+    </head>
+    <body >
+        <div id='home_bg'>
+        {% load socialaccount %}
+        {% providers_media_js %}
+        <script>
+
+            var selectedFriends=[];
+
+            window.fbAsyncInit = function() {
+                    var access_token = window.localStorage.getItem('fb_access_token');
+                    FB.init({
+                    appId      : '280699599004753',
+                    xfbml      : true,
+                    version    : 'v2.10'
+                    });
+
+                };
+
+                // function object_to_array($data) {
+                //     if(is_array($data) || is_object($data)){
+                //         $result = array();
+                //         foreach($data as $key => $value){
+                //             $result[$key] = $this->object_to_array($value);
+                //         }
+                //         return $result;
+                //     }
+                //     return $data;
+                // }
+
+            function me(){
+            var buffer="";
+            FB.api('/me', {fields:'name, id, location'}, function(response){
+                console.log(response);
+                // nopt= new Option(response['data'][i]['name'], response['data'][i]['id']);
+                // document.getElementById('friends').appendChild(nopt);
+                // 
+                buffer += "<div>Hello, " + response['name'] + "  <img src='http://graph.facebook.com/" + response['id'] + "/picture?type=square' height=50 width=50></div>";
+                document.getElementById('user_info').innerHTML=buffer;
+
+            });
+            }
+
+            function getpic(id){
+                document.getElementById('fimg').src="http://graph.facebook.com/" + id + "/picture?type=square";
+            }
+
+            function getFriendList(){
+                var buffer="";
+            FB.api('/me/friends', {fields:'name, id, location'}, function(response){
+                // console.log(response);
+                for(var i=0;i<=response['data'].length-1;i++){
+                // nopt= new Option(response['data'][i]['name'], response['data'][i]['id']);
+                // document.getElementById('friends').appendChild(nopt);
+                // 
+                buffer += "<div id=\""+response['data'][i]['id']+"\" style=\"margin:5px;width:250px;height:60px;padding:0px;cursor:pointer;\" onclick=\"fSelect(this.id);\"><img src='http://graph.facebook.com/" + response['data'][i]['id'] + "/picture?type=square' height=50 width=50> <b>" + response['data'][i]['name'] + "</b><br></div><br>";
+                console.log(response['data']);
+                
+                }
+                document.getElementById('friends').innerHTML=buffer;
+
+            }, {scope: 'user_friends'});
+            }
+
+
+            function fSelect(id){
+                if(selectedFriends[id]==id){
+                    document.getElementById(id).style.backgroundColor='#EEEEEE';
+                    delete selectedFriends[id];
+                }else{
+                document.getElementById(id).style.backgroundColor='#c7afec';
+                selectedFriends[id]=id;
+                }
+                }
+
+            function addF(){
+                var key;
+                var buffer="";
+                for (key in selectedFriends) {
+                        buffer+='<input type="text" name="group_fb_ids" value="'+selectedFriends[key]+'">'+'</input>';
+                }
+                document.getElementById('added').innerHTML=buffer;
+                }
+
+            function clearF(){
+                var key;
+                for (key in selectedFriends) {
+                        document.getElementById(selectedFriends[key]).style.backgroundColor="#FFFFFF";
+                        delete selectedFriends[key];
+                }
+                }
+
+            function showS(){
+                var key;
+                for (key in selectedFriends) {
+                        console.log(selectedFriends[key]);
+                }
+                }
+
+
+            hasrun = false;
+            function checkstatus(){
+                FB.getLoginStatus(function(response) {
+                    if (response.status === 'connected') {
+                        if(!hasrun){
+                            me();
+                            getFriendList();                    
+                            hasrun=true;
+                        }
+                    } else if (response.status === 'not_authorized') {
+                        top.location = "/";
+                        var uid = response.authResponse.userID;
+                        var accessToken = response.authResponse.accessToken;
+                    } else {
+                        top.location = "/";
+                        var uid = response.authResponse.userID;
+                        var accessToken = response.authResponse.accessToken;
+                    }
+                });
+                setTimeout(function(){ checkstatus(); }, 3000);
+            };
+
+
+            function fbLogoutUser() {
+                FB.getLoginStatus(function(response) {
+                    if (response && response.status === 'connected') {
+                        FB.logout(function(response) {
+                                // setTimeout(function(){  document.location.reload(); }, 2000);
+                        });
+                    }
+                });
+            }
+
+            function logout(){
+                fbLogoutUser();
+
+            // setTimeout(function(){  document.location.reload(); }, 2000);
+
+                }
+
+                  setTimeout(function(){ checkstatus(); }, 3000);
+
+            
+    </script>
+
+        <div class='top_bar'>
+            <h1 class='header'>Undecided</h1>
+            <a href='javascript:logout();' class='logout_btn'>Logout</a>
+        </div>
+        <h2 id="user_info">Hello {{name}}</h2>
+        <h3 class='welcome_msg'>Don't know where to go to lunch?</h3>
+        <h3 class='welcome_msg'>Let me decide for you!</h3>
+
+        <!-- <div class='search_container'>
+            <h3>(Search will populate the top 5 restaurants in San Jose, until we can figure out how to use location in the query)</h3>
+            <form action="/process" method='post'>
+                {% csrf_token %}
+                <input type="text" name='search' placeholder='Search Restaurants'>
+                <input type="text" name='location' placeholder='Zip Code'>
+                <input type="submit" value="Find Restaurants">
+            </form>
+        </div> -->
+
+        <div class='main_content_box'>
+            <div class='top_5_container'>
+                <h3>Here's the restaurants we've found based on your group's preferences</h3>
+                <div class='top_5'>
+                    <div class='restaurant_info'>
+                        <h3><a href='{{ places.url }}' target='_blank'>{{ places.name }}</a></h3>
+                        <h4 class='restaurant_info_spacer'>Rating score of {{ places.rating }}, based on {{ places.review_count }} reviews</h4>
+                        {% if places.price %}
+                            <h4 class='restaurant_info_spacer'>Price: {{ places.price }}</h4>
+                        {% else %}
+                            <h4>Price: Unavailable</h4>
+                        {% endif %}
+                        {% if places.location.address1 %}
+                            <h4 class='restaurant_info_spacer'>{{ places.location.address1 }}, {{ places.location.address2 }}</h4>
+                            <h4>{{ places.location.city }}, {{ places.location.state }} {{ places.location.zip_code }}</h4>
+                        {% else %}
+                            <h4 class='restaurant_info_spacer'>Address Unavailable</h4>
+                        {% endif %}
+                        {% if places.display_phone %}
+                            <h4 class='restaurant_info_spacer'>{{ places.display_phone }}</h4>
+                        {% else %}
+                            <h4 class='restaurant_info_spacer'>Phone Number Unavilable</h4>
+                        {% endif %}
+                    </div>
+                    <div class='restaurant_img_container'>
+                        <a href='{{ places.url }}' target='_blank'><img src='{{ places.image_url }}' class='restaurant_img'></a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="map"></div>
+            <script>
+                var map;
+                function initMap() {
+                    var uluru = {lat: {{ places.coordinates.latitude }}, lng: {{ places.coordinates.longitude }}};
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: uluru
+                    });
+                    var marker = new google.maps.Marker({
+                        position: uluru,
+                        map: map
+                    });
+                }
+            </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeCMW35_Qsys0Nq1l5-NixQaCId_DYV9c&callback=initMap" async defer>
+            </script> 
+
+            <div class='add_friends_container'>
+                <h3>Choose some friends to invite:</h3>
+                <form action="/add_friends" method='post'>
+                    {% csrf_token %}                
+                    <div id="friends" style="width:auto;height:auto;margin:10px;padding:5px;">
+                    </div>
+                    <input type="button" onclick="showS();" value="Show">
+                    <input type="button" onclick="addF();" value="Store">
+                    <input type="button" onclick="clearF();" value="Clear All">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Friends in Your Group</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="width:300px;height:100px;" id="added">
+                    </div>
+                    <input class='create_group' type='submit' name='create_group' value='Create Group'>
+                </form>
+            </div>
+        </div>
+
+                  <!-- <img id="fimg" height=50 width=50 src="http://gurucul.com/wp-content/uploads/2015/01/default-user-icon-profile.png">
+            <!-- <select id="friends" onchange="getpic(this.options[this.selectedIndex].value);"> -->
+                <!-- <option> -- Friends -- </option>
+            </select> --> 
+        </div>
+        </body>
+</html>

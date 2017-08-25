@@ -1,0 +1,167 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+@media all and (max-width: 1024px){
+    overflow: scroll;
+}
+html{
+    height: 100%;
+}
+body{
+    width: 100%;
+    font-family: Helvetica;
+    background-color: #E2EFE5;
+}
+#index_bg{
+    background-image: url("../images/food_bg.png");
+}
+#home_bg{
+    background-image: url("../images/eating_together.jpg"); 
+    background-image: 100%;
+    background-repeat: no-repeat;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover; 
+    background-size: cover;
+}
+.fb_login_box{
+    height: 100px;
+    width: 300px;
+    margin: 200px 0px 0px 500px;
+    border-radius: 5px;
+    background-color: #563D7C;
+}
+.fb_login_btn{
+    margin: 28px 0px 0px 23px;
+}
+.top_bar{
+    padding: 15px;
+    color: lightgrey;
+    background-color: #563D7C; 
+}
+.header{
+    display: inline-block;
+}
+.logout_btn{
+    margin-left: 30%;
+    font-weight: bold;
+    font-size: 14px;
+    color: lightgrey;
+    display: inline-block;
+}
+.welcome_msg{
+    color: white;
+}
+.main_content_box{
+    width: 100%;
+    margin: 20px 0px 0px 0px;
+    display: block;
+}
+.top_5_container{
+    width: 45%;
+    margin: 0px 0px 0px 20px;
+    vertical-align: top;
+    display: inline-block;
+}
+.top_5{
+    width: 100%;
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid #18392b;
+    background-color: #d8cfe5;
+    border-radius: 10px;
+    opacity: 0.8;
+    display: inline-block;
+}
+.restaurant_info{
+    width: 55%;
+    vertical-align: top;
+    display: inline-block;
+}
+.restaurant_info_spacer{
+    margin-top: 10px;
+}
+.restaurant_img_container{
+    width: 200px;
+    align-content: right;
+    overflow: hidden;
+    display: inline-block;
+}
+.restaurant_img{
+    height: 150px;
+    margin-left: 40px;
+    border-radius: 5px;
+}
+#map{
+    width: 250px;
+    height: 250px;
+    vertical-align: top;
+    display: inline-block;
+}
+.add_friends_container{
+    width: 250px;
+    padding: 10px;
+    background-color: lightgrey;
+    border: 1px solid #18392b;
+    border-radius: 10px;
+    vertical-align: top;
+    display: inline-block;
+    opacity: 0.8;
+}
+#friends{
+    overflow: hidden;
+}
+.category_list_container{
+    margin: 20px 0px 0px 20px;
+    display: block;
+}
+.category_list{
+    vertical-align: top;
+    display: inline-block;
+}
+.categories li{
+    margin: 10px 20px 10px 20px;
+    list-style-type: none;
+}
+.location_input_container{
+    width: 300px;
+    margin: 0px 0px 0px 375px;
+    display: block;
+}
+.location_input{
+    text-align: center;
+    border-radius: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: .1rem solid #ccc;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    user-select: text;
+    cursor: auto;
+    outline: 0;
+    padding: .7em;
+    width: 100%;
+}
+.submit_categories{
+    height: 50px;
+    width: 200px;
+    margin: 20px 0px 20px 420px;
+    font-weight: Bold; 
+    color: lightgrey;
+    background-color: #563D7C;
+    border: none;
+    border-radius: 10px;
+}
+.return_home{
+    margin-left: 450px;
+    display: block;
+    font-size: 12px;
+}
+.create_group{
+
+}
